@@ -5,7 +5,8 @@ import logging
 import threading
 from enum import Enum
 
-from web3 import Web3, HTTPProvider, WebSocketProvider 
+from web3 import Web3
+from web3.providers.legacy_websocket import LegacyWebSocketProvider
 from web3.middleware.proof_of_authority import ExtraDataToPOAMiddleware
 
 logging.basicConfig(format='%(asctime)s - %(levelname)s - %(message)s', level=logging.INFO)
@@ -27,9 +28,9 @@ class BlockchainInterface:
     def __init__(self, eth_address, private_key, eth_node_url, abi_path, contract_address):
         # --- Provider (v7) ---
         if eth_node_url.startswith(("ws://", "wss://")):
-            self.web3 = Web3(WebSocketProvider(eth_node_url))
+            self.web3 = Web3(LegacyWebSocketProvider(eth_node_url))
         elif eth_node_url.startswith(("http://", "https://")):
-            self.web3 = Web3(HTTPProvider(eth_node_url))
+            self.web3 = Web3(Web3.HTTPProvider(eth_node_url))
         else:
             raise ValueError("eth_node_url must start with ws://, wss://, http:// or https://")
 
